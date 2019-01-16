@@ -27,17 +27,9 @@ export default declare(api => {
                 let directiveFound = false;
 
                 if (comments) {
-                    for (const comment of (comments: Array<Object>)) {
+                    for (const comment of (comments)) {
                         if (FLOW_DIRECTIVE.test(comment.value)) {
                             directiveFound = true;
-
-                            // remove flow directive
-                            comment.value = comment.value.replace(FLOW_DIRECTIVE, "");
-
-                            // remove the comment completely if it only consists of whitespace and/or stars
-                            if (!comment.value.replace(/\*/g, "").trim()) {
-                                comment.ignore = true;
-                            }
                         }
                     }
                 }
