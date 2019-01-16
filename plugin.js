@@ -10,7 +10,7 @@ export default declare(api => {
     let skipStrip = false;
 
     return {
-        name: "transform-flow-strip-types",
+        name: "transform-flow-extract-definitions",
         inherits: syntaxFlow,
 
         visitor: {
