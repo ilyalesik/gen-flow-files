@@ -17,11 +17,18 @@ const plugin = require("./plugin");
 const code = `
 // @flow
 
-function foo(one: any, two: number, three?): string {}
+function foo(one: any, two: number, three?): string {
+    const one1 = "" + one;
+    const two1 = "" + two;
+    return one1 + two1;
+ }
 `;
 
 require("@babel/core").transform(code, {
     plugins: [plugin]
 }, function(err, result) {
+    if (err) {
+        console.log(err);
+    }
     console.log(result.code);
 });

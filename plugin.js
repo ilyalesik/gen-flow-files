@@ -63,84 +63,22 @@ export default declare(api => {
                 }
             },
 
-            Flow(path) {
-                if (skipStrip) {
-                    throw path.buildCodeFrameError(
-                        "A @flow directive is required when using Flow annotations with " +
-                        "the `requireDirective` option.",
-                    );
-                }
-
-                path.remove();
-            },
-
-            ClassProperty(path) {
+            FunctionDeclaration(path) {
                 if (skipStrip) return;
-                path.node.variance = null;
-                path.node.typeAnnotation = null;
-                if (!path.node.value) path.remove();
-            },
-
-            ClassPrivateProperty(path) {
-                if (skipStrip) return;
-                path.node.typeAnnotation = null;
-            },
-
-            Class(path) {
-                if (skipStrip) return;
-                path.node.implements = null;
-
-                // We do this here instead of in a `ClassProperty` visitor because the class transform
-                // would transform the class before we reached the class property.
-                path.get("body.body").forEach(child => {
-                    if (child.isClassProperty()) {
-                        child.node.typeAnnotation = null;
-                        if (!child.node.value) child.remove();
-                    }
-                });
-            },
-
-            AssignmentPattern({ node }) {
-                if (skipStrip) return;
-                node.left.optional = false;
-            },
-
-            Function({ node }) {
-                if (skipStrip) return;
-                for (let i = 0; i < node.params.length; i++) {
-                    const param = node.params[i];
-                    param.optional = false;
-                    if (param.type === "AssignmentPattern") {
-                        param.left.optional = false;
-                    }
-                }
-
-                node.predicate = null;
-            },
-
-            TypeCastExpression(path) {
-                if (skipStrip) return;
-                let { node } = path;
-                do {
-                    node = node.expression;
-                } while (t.isTypeCastExpression(node));
-                path.replaceWith(node);
-            },
-
-            CallExpression({ node }) {
-                if (skipStrip) return;
-                node.typeArguments = null;
-            },
-
-            OptionalCallExpression({ node }) {
-                if (skipStrip) return;
-                node.typeArguments = null;
-            },
-
-            NewExpression({ node }) {
-                if (skipStrip) return;
-                node.typeArguments = null;
-            },
+                const declareFunction = t.declareFunction(path.node.id);
+                const functionTypeAnnotation = t.functionTypeAnnotation(null, path.node.params.map((param) =>
+                    t.functionTypeParam(
+                        t.identifier(param.name),
+                        param.typeAnnotation && param.typeAnnotation.typeAnnotation || t.anyTypeAnnotation())
+                    ),
+                    null,
+                    path.node.returnType.typeAnnotation
+                );
+                declareFunction.id.typeAnnotation = t.typeAnnotation(functionTypeAnnotation);
+                path.replaceWith(
+                    declareFunction
+                );
+            }
         },
     };
 });
