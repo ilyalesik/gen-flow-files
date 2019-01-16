@@ -1,0 +1,21 @@
+{
+  "name": "flow-extract-definitions",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/plugin-syntax-flow": "^7.2.0"
+  },
+  "devDependencies": {
+    "@babel/polyfill": "^7.2.5",
+    "@babel/preset-env": "^7.2.3",
+    "@babel/preset-flow": "^7.0.0",
+    "@babel/register": "^7.0.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ilya Lesik",
+  "license": "MIT"
+}
