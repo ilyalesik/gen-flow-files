@@ -69,7 +69,11 @@ export default declare(api => {
                     null,
                     path.node.returnType.typeAnnotation
                 );
+                if (path.node.typeParameters) {
+                    functionTypeAnnotation.typeParameters = path.node.typeParameters;
+                }
                 declareFunction.id.typeAnnotation = t.typeAnnotation(functionTypeAnnotation);
+
                 path.replaceWith(
                     declareFunction
                 );
