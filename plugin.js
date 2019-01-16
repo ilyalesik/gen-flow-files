@@ -58,11 +58,14 @@ export default declare(api => {
             FunctionDeclaration(path) {
                 if (skipStrip) return;
                 const declareFunction = t.declareFunction(path.node.id);
-                const functionTypeAnnotation = t.functionTypeAnnotation(null, path.node.params.map((param) =>
-                    t.functionTypeParam(
-                        t.identifier(param.name),
-                        param.typeAnnotation && param.typeAnnotation.typeAnnotation || t.anyTypeAnnotation())
-                    ),
+                const functionTypeAnnotation = t.functionTypeAnnotation(null, path.node.params.map((param) => {
+                        const functionTypeParam = t.functionTypeParam(
+                            t.identifier(param.name),
+                            param.typeAnnotation && param.typeAnnotation.typeAnnotation || t.anyTypeAnnotation()
+                        );
+                        functionTypeParam.optional = param.optional;
+                        return functionTypeParam;
+                    }),
                     null,
                     path.node.returnType.typeAnnotation
                 );
