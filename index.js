@@ -12,7 +12,7 @@ try {
 
 require("@babel/register")(config);
 require("@babel/polyfill");
-const plugin = require("./plugin");
+const plugin = require("./traverse");
 
 const code = `
 // @flow
