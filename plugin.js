@@ -38,23 +38,6 @@ export default declare(api => {
                     skipStrip = true;
                 }
             },
-            ImportDeclaration(path) {
-                if (skipStrip) return;
-                if (!path.node.specifiers.length) return;
-
-                let typeCount = 0;
-
-                path.node.specifiers.forEach(({ importKind }) => {
-                    if (importKind === "type" || importKind === "typeof") {
-                        typeCount++;
-                    }
-                });
-
-                if (typeCount === path.node.specifiers.length) {
-                    path.remove();
-                }
-            },
-
             FunctionDeclaration(path) {
                 if (skipStrip) return;
                 const declareFunction = t.declareFunction(path.node.id);
