@@ -34,7 +34,7 @@ export default declare(api => {
                     }
                 }
 
-                if (!directiveFound && opts.requireDirective) {
+                if (!directiveFound) {
                     skipStrip = true;
                 }
             },
