@@ -60,6 +60,14 @@ export default declare(api => {
                 path.replaceWith(
                     declareFunction
                 );
+
+                if (t.isExportNamedDeclaration(path.parentPath)) {
+                    path.parentPath.replaceWith(
+                        t.declareExportDeclaration(
+                            declareFunction
+                        )
+                    )
+                }
             }
         },
     };

@@ -1,2 +1,2 @@
 // @flow
-export declare function foo(one: any, two: number): string;
+declare export function foo(one: any, two: number): string;
