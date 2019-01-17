@@ -57,17 +57,21 @@ export default declare(api => {
                 }
                 declareFunction.id.typeAnnotation = t.typeAnnotation(functionTypeAnnotation);
 
+                if (t.isExportDefaultDeclaration(path.parentPath) || t.isExportNamedDeclaration(path.parentPath)) {
+                    const declareExportDeclaration = t.declareExportDeclaration(
+                        declareFunction
+                    );
+                    declareExportDeclaration.default = t.isExportDefaultDeclaration(path.parentPath);
+                    path.parentPath.replaceWith(
+                        declareExportDeclaration
+                    )
+                }
+
                 path.replaceWith(
                     declareFunction
                 );
 
-                if (t.isExportNamedDeclaration(path.parentPath)) {
-                    path.parentPath.replaceWith(
-                        t.declareExportDeclaration(
-                            declareFunction
-                        )
-                    )
-                }
+
             }
         },
     };

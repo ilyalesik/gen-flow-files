@@ -17,11 +17,11 @@ const plugin = require("./plugin");
 const code = `
 // @flow
 
-export function foo(one: any, two: number, three?): string {
+export default function foo(one: any, two: number): string {
     const one1 = "" + one;
     const two1 = "" + two;
     return one1 + two1;
- }
+}
 `;
 
 require("@babel/core").transform(code, {
