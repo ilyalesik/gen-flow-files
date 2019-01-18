@@ -1,6 +1,6 @@
 {
-  "name": "flow-extract-definitions",
-  "version": "1.0.0",
+  "name": "gen-flow-files",
+  "version": "0.1.0",
   "description": "",
   "main": "src/index.js",
   "dependencies": {
