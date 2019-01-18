@@ -1,6 +1,6 @@
 {
   "name": "gen-flow-files",
-  "version": "0.1.1",
+  "version": "0.1.3",
   "description": "",
   "main": "dist/cli.js",
   "dependencies": {
@@ -44,8 +44,16 @@
     "prettier",
     "test"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ilyalesik/gen-flow-files.git"
+  },
   "author": "Ilya Lesik",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ilyalesik/gen-flow-files/issues"
+  },
+  "homepage": "https://github.com/ilyalesik/gen-flow-files#readme",
   "jest": {
     "testEnvironment": "node",
     "snapshotSerializers": [

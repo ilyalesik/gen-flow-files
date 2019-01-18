@@ -38,7 +38,7 @@ export default options => {
                             },
                             code
                         );
-                        const outputFile = path.resolve(outputDir, file);
+                        const outputFile = path.resolve(outputDir, file + ".flow");
                         const outputFileDir = path.dirname(outputFile);
 
                         const createFile = () => {
