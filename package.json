@@ -22,12 +22,13 @@
     "jest": "^23.6.0",
     "jest-file-snapshot": "^0.3.2",
     "pre-commit": "^1.2.2",
-    "prettier": "^1.15.3"
+    "prettier": "^1.15.3",
+    "rimraf": "^2.6.3"
   },
   "scripts": {
     "test": "jest",
     "prettier": "prettier \"*/**/*.js\" --ignore-path ./.prettierignore --write && git add . && git status",
-    "generate-example-code": "node src/index.js example/orginal-code example/generated-code"
+    "generate-example-code": "rimraf example/generated-code && node src/index.js example/orginal-code example/generated-code"
   },
   "pre-commit": [
     "prettier",
