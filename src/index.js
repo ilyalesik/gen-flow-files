@@ -13,4 +13,11 @@ try {
 require("@babel/register")(config);
 require("@babel/polyfill");
 
-require("./cli");
+const inputDir = process.argv[2];
+const outputDir = process.argv[3];
+
+const genFlowFiles = require("./cli").default;
+genFlowFiles({
+    inputDir,
+    outputDir
+});
