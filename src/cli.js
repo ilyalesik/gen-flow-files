@@ -2,19 +2,6 @@ var glob = require("glob");
 var path = require("path");
 var fs = require("fs");
 
-var babelrc = fs.readFileSync("./.babelrc");
-var config;
-
-try {
-    config = JSON.parse(babelrc);
-} catch (err) {
-    console.error("==>     ERROR: Error parsing your .babelrc.");
-    console.error(err);
-}
-
-require("@babel/register")(config);
-require("@babel/polyfill");
-
 var parser = require("@babel/parser");
 var traverse = require("./traverse")._traverse;
 const generate = require("@babel/generator").default;

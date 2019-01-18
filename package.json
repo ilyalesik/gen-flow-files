@@ -26,7 +26,8 @@
   },
   "scripts": {
     "test": "jest",
-    "prettier": "prettier \"*/**/*.js\" --ignore-path ./.prettierignore --write && git add . && git status"
+    "prettier": "prettier \"*/**/*.js\" --ignore-path ./.prettierignore --write && git add . && git status",
+    "generate-example-code": "node src/index.js example/orginal-code example/generated-code"
   },
   "pre-commit": [
     "prettier",
