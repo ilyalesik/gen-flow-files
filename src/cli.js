@@ -1,11 +1,10 @@
-var glob = require("glob");
-var path = require("path");
-var fs = require("fs");
-
-var parser = require("@babel/parser");
-var traverse = require("./traverse")._traverse;
-const generate = require("@babel/generator").default;
-var mkdirp = require("mkdirp");
+import glob from "glob";
+import path from "path";
+import fs from "fs";
+const parser = require("@babel/parser");
+import { _traverse as traverse } from "./traverse";
+import generate from "@babel/generator";
+import mkdirp from "mkdirp";
 
 const src = process.argv[2];
 const dist = process.argv[3];
