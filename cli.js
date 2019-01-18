@@ -18,6 +18,7 @@ require("@babel/polyfill");
 var parser = require("@babel/parser");
 var traverse = require("./traverse")._traverse;
 const generate = require('@babel/generator').default;
+var mkdirp = require('mkdirp');
 
 const src = process.argv[2];
 const dist = process.argv[3];
@@ -50,10 +51,25 @@ glob("**/*.js", {
                 const output = generate(ast, { /* options */ }, code);
                 console.log(output.code);
                 const outputFile = path.resolve(dist, file);
-                fs.writeFile(outputFile, output.code, 'utf8', (err) => {
-                    if (err) throw err;
-                    console.log(outputFile);
-                });
+                const outputFileDir = path.dirname(outputFile);
+
+                const createFile = () => {
+                    fs.writeFile(outputFile, output.code, 'utf8', (err) => {
+                        if (err) throw err;
+                        console.log(outputFile);
+                    });
+                };
+
+                if (!fs.existsSync(outputFileDir)){
+                    mkdirp(outputFileDir, function (err) {
+                        if (err) throw err
+                        createFile()
+                    });
+                } else {
+                    createFile();
+                }
+
+
             }
 
         });
