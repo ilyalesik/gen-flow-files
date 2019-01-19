@@ -58,6 +58,36 @@ export const visitor = options => {
             }
 
             path.replaceWith(declareFunction);
+        },
+        ClassDeclaration(path) {
+            if (skipTransform) return;
+            const body = path.node.body.body;
+            const properties = body.map(bodyMember => {
+                if (t.isClassMethod(bodyMember)) {
+                    const functionExpression = bodyMember;
+                    const functionTypeAnnotation = t.functionTypeAnnotation(
+                        functionExpression.typeParameters,
+                        functionExpression.params.map(param => {
+                            const functionTypeParam = t.functionTypeParam(
+                                t.identifier(param.name),
+                                (param.typeAnnotation && param.typeAnnotation.typeAnnotation) || t.anyTypeAnnotation()
+                            );
+                            functionTypeParam.optional = param.optional;
+                            return functionTypeParam;
+                        }),
+                        null,
+                        functionExpression.returnType && functionExpression.returnType.typeAnnotation
+                    );
+
+                    const objectTypeProperty = t.objectTypeProperty(bodyMember.key, functionTypeAnnotation);
+                    objectTypeProperty.method = true;
+                    objectTypeProperty.static = bodyMember.static;
+                    return objectTypeProperty;
+                }
+            });
+            const objectTypeAnnotation = t.objectTypeAnnotation(properties);
+            const declareClass = t.declareClass(path.node.id, path.node.typeParameters, [], objectTypeAnnotation);
+            path.replaceWith(declareClass);
         }
     };
 };
