@@ -34,20 +34,26 @@ export const visitor = options => {
             if (skipTransform) return;
             const declareFunction = t.declareFunction(path.node.id);
             const functionTypeAnnotation = t.functionTypeAnnotation(
-                null,
-                path.node.params.map(param => {
-                    const functionTypeParam = t.functionTypeParam(
-                        t.identifier(param.name),
-                        (param.typeAnnotation && param.typeAnnotation.typeAnnotation) || t.anyTypeAnnotation()
-                    );
-                    functionTypeParam.optional = param.optional;
-                    return functionTypeParam;
-                }),
+                path.node.typeParameters,
+                path.node.params
+                    .filter(param => t.isIdentifier(param))
+                    .map(param => {
+                        const functionTypeParam = t.functionTypeParam(
+                            t.identifier(param.name),
+                            (param.typeAnnotation && param.typeAnnotation.typeAnnotation) || t.anyTypeAnnotation()
+                        );
+                        functionTypeParam.optional = param.optional;
+                        return functionTypeParam;
+                    }),
                 null,
                 path.node.returnType.typeAnnotation
             );
-            if (path.node.typeParameters) {
-                functionTypeAnnotation.typeParameters = path.node.typeParameters;
+            if (path.node.params.length >= 1 && t.isRestElement(path.node.params[path.node.params.length - 1])) {
+                const restElement = path.node.params[path.node.params.length - 1];
+                functionTypeAnnotation.rest = t.functionTypeParam(
+                    t.identifier(restElement.argument.name),
+                    (restElement.typeAnnotation && restElement.typeAnnotation.typeAnnotation) || t.anyTypeAnnotation()
+                );
             }
             declareFunction.id.typeAnnotation = t.typeAnnotation(functionTypeAnnotation);
 
