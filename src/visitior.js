@@ -82,7 +82,8 @@ export const visitor = options => {
                             return functionTypeParam;
                         }),
                         null,
-                        functionExpression.returnType && functionExpression.returnType.typeAnnotation
+                        (functionExpression.returnType && functionExpression.returnType.typeAnnotation) ||
+                            t.anyTypeAnnotation()
                     );
 
                     const objectTypeProperty = t.objectTypeProperty(bodyMember.key, functionTypeAnnotation);

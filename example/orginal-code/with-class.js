@@ -8,6 +8,8 @@ class URL {
         return this.urlStr;
     }
 
+    render() {}
+
     static compare(url1: URL, url2: URL): boolean {
         return url1 === url2;
     }
