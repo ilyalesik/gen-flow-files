@@ -1,4 +1,4 @@
-import { types as t } from "@babel/core";
+const t = require("@babel/types");
 
 const FLOW_DIRECTIVE = /(@flow(\s+(strict(-local)?|weak))?|@noflow)/;
 
