@@ -1,27 +1,60 @@
 {
-  "name": "flow-extract-definitions",
-  "version": "1.0.0",
+  "name": "gen-flow-files",
+  "version": "0.2.5",
   "description": "",
-  "main": "index.js",
+  "main": "dist/cli.js",
   "dependencies": {
     "@babel/core": "^7.2.2",
-    "@babel/plugin-syntax-flow": "^7.2.0"
+    "@babel/generator": "^7.2.2",
+    "@babel/parser": "^7.2.3",
+    "@babel/plugin-syntax-flow": "^7.2.0",
+    "@babel/traverse": "^7.2.3",
+    "@babel/types": "^7.3.0",
+    "glob": "^7.1.3",
+    "mkdirp": "^0.5.1",
+    "yargs": "^12.0.5"
   },
   "devDependencies": {
+    "@babel/cli": "^7.2.3",
     "@babel/polyfill": "^7.2.5",
     "@babel/preset-env": "^7.2.3",
     "@babel/preset-flow": "^7.0.0",
     "@babel/register": "^7.0.0",
     "babel-core": "^7.0.0-bridge.0",
     "babel-test": "^0.1.2",
+    "cross-env": "^5.2.0",
     "jest": "^23.6.0",
-    "jest-file-snapshot": "^0.3.2"
+    "jest-file-snapshot": "^0.3.2",
+    "pre-commit": "^1.2.2",
+    "prettier": "^1.15.3",
+    "rimraf": "^2.6.3"
+  },
+  "bin": {
+    "gen-flow-files": "./bin/gen-flow-files.js"
   },
   "scripts": {
-    "test": "jest"
+    "build": "npm run build:clean && npm run build:lib",
+    "build:clean": "rimraf dist",
+    "build:lib": "cross-env BABEL_ENV=production babel src --out-dir dist --ignore '**/__tests__/**'",
+    "test": "jest",
+    "prettier": "prettier \"*/**/*.js\" --ignore-path ./.prettierignore --write && git add . && git status",
+    "generate-example-code": "rimraf example/generated-code && ./bin/gen-flow-files.js example/orginal-code --out-dir example/generated-code",
+    "prepublish": "npm run test && npm run build && npm run generate-example-code"
+  },
+  "pre-commit": [
+    "prettier",
+    "test"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ilyalesik/gen-flow-files.git"
   },
   "author": "Ilya Lesik",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ilyalesik/gen-flow-files/issues"
+  },
+  "homepage": "https://github.com/ilyalesik/gen-flow-files#readme",
   "jest": {
     "testEnvironment": "node",
     "snapshotSerializers": [
