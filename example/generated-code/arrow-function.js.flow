@@ -1,2 +1,2 @@
 // @flow
-declare var foo: (one: any, two: number) => string;
+declare export var foo: (one: any, two: number) => string;

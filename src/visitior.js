@@ -28,6 +28,16 @@ const transformToFunctionTypeAnnotation = path => {
     return functionTypeAnnotation;
 };
 
+const isExportDeclaration = path => {
+    return t.isExportDefaultDeclaration(path) || t.isExportNamedDeclaration(path);
+};
+
+const transformToDeclareExportDeclaration = (path, declaration) => {
+    const declareExportDeclaration = t.declareExportDeclaration(declaration);
+    declareExportDeclaration.default = t.isExportDefaultDeclaration(path);
+    return declareExportDeclaration;
+};
+
 export const visitor = options => {
     let skipTransform = false;
     const changeSkipTransform = newValue => {
@@ -62,9 +72,8 @@ export const visitor = options => {
             const functionTypeAnnotation = transformToFunctionTypeAnnotation(path);
             declareFunction.id.typeAnnotation = t.typeAnnotation(functionTypeAnnotation);
 
-            if (t.isExportDefaultDeclaration(path.parentPath) || t.isExportNamedDeclaration(path.parentPath)) {
-                const declareExportDeclaration = t.declareExportDeclaration(declareFunction);
-                declareExportDeclaration.default = t.isExportDefaultDeclaration(path.parentPath);
+            if (isExportDeclaration(path.parentPath)) {
+                const declareExportDeclaration = transformToDeclareExportDeclaration(path.parentPath, declareFunction);
                 path.parentPath.replaceWith(declareExportDeclaration);
             }
 
@@ -86,6 +95,14 @@ export const visitor = options => {
 
             const declareVariable = t.declareVariable(t.identifier(variableDeclarator.node.id.name));
             declareVariable.id.typeAnnotation = t.typeAnnotation(transformToFunctionTypeAnnotation(path));
+
+            if (isExportDeclaration(variableDeclaration.parentPath)) {
+                const declareExportDeclaration = transformToDeclareExportDeclaration(
+                    variableDeclaration.parentPath,
+                    declareVariable
+                );
+                variableDeclaration.parentPath.replaceWith(declareExportDeclaration);
+            }
 
             variableDeclaration.replaceWith(declareVariable);
         }
