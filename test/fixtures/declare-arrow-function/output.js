@@ -1,2 +1,2 @@
 // @flow
-declare function foo(one: any, two: number): string;
+declare var foo: (one: any, two: number) => string;
