@@ -1,5 +1,5 @@
 // @flow
 
-function foo<T, G>(arg: T, arg1: G): T {
+function foo<T: {[string]: number}, G>(arg: T, arg1: G): T {
     return arg
 }
