@@ -108,6 +108,17 @@ export const visitor = options => {
             });
             const objectTypeAnnotation = t.objectTypeAnnotation(properties);
             const declareClass = t.declareClass(path.node.id, path.node.typeParameters, [], objectTypeAnnotation);
+
+            if (path.node.superClass) {
+                declareClass.extends = [
+                    t.interfaceExtends(
+                        t.identifier(path.node.superClass.name),
+                        (path.node.superTypeParameters &&
+                            t.typeParameterInstantiation(path.node.superTypeParameters.params)) ||
+                            undefined
+                    )
+                ];
+            }
             path.replaceWith(declareClass);
         },
         ArrowFunctionExpression(path) {
