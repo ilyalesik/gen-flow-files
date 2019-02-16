@@ -82,30 +82,42 @@ export const visitor = options => {
         ClassDeclaration(path) {
             if (skipTransform) return;
             const body = path.node.body.body;
-            const properties = body.map(bodyMember => {
-                if (t.isClassMethod(bodyMember)) {
-                    const functionExpression = bodyMember;
-                    const functionTypeAnnotation = t.functionTypeAnnotation(
-                        functionExpression.typeParameters,
-                        functionExpression.params.map(param => {
-                            const functionTypeParam = t.functionTypeParam(
-                                t.identifier(param.name),
-                                (param.typeAnnotation && param.typeAnnotation.typeAnnotation) || t.anyTypeAnnotation()
-                            );
-                            functionTypeParam.optional = param.optional;
-                            return functionTypeParam;
-                        }),
-                        null,
-                        (functionExpression.returnType && functionExpression.returnType.typeAnnotation) ||
-                            t.anyTypeAnnotation()
-                    );
+            const properties = body
+                .map(bodyMember => {
+                    if (t.isClassMethod(bodyMember)) {
+                        const functionExpression = bodyMember;
+                        const functionTypeAnnotation = t.functionTypeAnnotation(
+                            functionExpression.typeParameters,
+                            functionExpression.params.map(param => {
+                                const functionTypeParam = t.functionTypeParam(
+                                    t.identifier(param.name),
+                                    (param.typeAnnotation && param.typeAnnotation.typeAnnotation) ||
+                                        t.anyTypeAnnotation()
+                                );
+                                functionTypeParam.optional = param.optional;
+                                return functionTypeParam;
+                            }),
+                            null,
+                            (functionExpression.returnType && functionExpression.returnType.typeAnnotation) ||
+                                t.anyTypeAnnotation()
+                        );
 
-                    const objectTypeProperty = t.objectTypeProperty(bodyMember.key, functionTypeAnnotation);
-                    objectTypeProperty.method = true;
-                    objectTypeProperty.static = bodyMember.static;
-                    return objectTypeProperty;
-                }
-            });
+                        const objectTypeProperty = t.objectTypeProperty(bodyMember.key, functionTypeAnnotation);
+                        objectTypeProperty.method = true;
+                        objectTypeProperty.static = bodyMember.static;
+                        return objectTypeProperty;
+                    }
+                    if (t.isClassProperty(bodyMember)) {
+                        const objectTypeProperty = t.objectTypeProperty(
+                            bodyMember.key,
+                            bodyMember.typeAnnotation.typeAnnotation
+                        );
+                        objectTypeProperty.method = false;
+                        objectTypeProperty.static = bodyMember.static;
+                        return objectTypeProperty;
+                    }
+                })
+                .filter(member => !!member);
             const objectTypeAnnotation = t.objectTypeAnnotation(properties);
             const declareClass = t.declareClass(path.node.id, path.node.typeParameters, [], objectTypeAnnotation);
 
