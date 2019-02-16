@@ -119,6 +119,9 @@ export const visitor = options => {
                     )
                 ];
             }
+            if (path.node.implements) {
+                declareClass.implements = path.node.implements;
+            }
             path.replaceWith(declareClass);
         },
         ArrowFunctionExpression(path) {
