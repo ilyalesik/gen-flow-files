@@ -1,6 +1,6 @@
 // @flow
 
-class URL {
+class URL<T> {
     constructor(urlStr: string): URL {
         this.urlStr = urlStr;
     }

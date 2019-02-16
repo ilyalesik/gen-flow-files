@@ -1,5 +1,5 @@
 // @flow
-declare class URL {
+declare class URL<T> {
   constructor(urlStr: string): URL,
   toString(): string,
   render(): any,
