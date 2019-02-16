@@ -16,7 +16,7 @@ const transformToFunctionTypeAnnotation = path => {
                 return functionTypeParam;
             }),
         null,
-        path.node.returnType.typeAnnotation
+        (path.node.returnType && path.node.returnType.typeAnnotation) || t.anyTypeAnnotation()
     );
     if (path.node.params.length >= 1 && t.isRestElement(path.node.params[path.node.params.length - 1])) {
         const restElement = path.node.params[path.node.params.length - 1];
