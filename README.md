@@ -1,4 +1,8 @@
 # gen-flow-files
+
+[![npm version](https://img.shields.io/npm/v/gen-flow-files.svg)](https://www.npmjs.com/package/gen-flow-files)
+[![npm downloads](https://img.shields.io/npm/dt/gen-flow-files.svg)](https://www.npmjs.com/package/gen-flow-files)
+
 This is a script which finds `.js` files with @flow annotation, extract flow definitions and save to specific folder.
 
 As example, `<inputDir>/example.js`
