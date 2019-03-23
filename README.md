@@ -9,7 +9,7 @@ As example, `<inputDir>/example.js`
 ```javascript
 // @flow
 
-extract function foo(arg1: number: arg2: string): string {
+extract function foo(arg1: number, arg2: string): string {
     // some code here
 }
 ```
