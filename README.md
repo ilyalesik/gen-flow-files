@@ -17,7 +17,7 @@ will be transformed to `<outputDir>/example.js.flow`:
 ```javascript
 // @flow
 
-declare extract function foo(arg1: number: arg2: string): string;
+declare extract function foo(arg1: number, arg2: string): string;
 ```
 
 ## Installation
