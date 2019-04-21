@@ -1,6 +1,6 @@
 {
   "name": "gen-flow-files",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "",
   "main": "dist/cli.js",
   "dependencies": {
