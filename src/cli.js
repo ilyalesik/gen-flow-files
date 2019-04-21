@@ -23,9 +23,29 @@ export default options => {
                         sourceType: "module",
 
                         plugins: [
-                            // enable jsx and flow syntax
-                            "jsx",
-                            "flow"
+                            // enable common plugins
+                            "flow", 
+                            "jsx", 
+                            "estree", 
+                            "asyncFunctions", 
+                            "asyncGenerators", 
+                            "classConstructorCall", 
+                            "classProperties", 
+                            "decorators-legacy",
+                            "doExpressions", 
+                            "exponentiationOperator", 
+                            "exportExtensions", 
+                            "functionBind", 
+                            "functionSent", 
+                            "objectRestSpread", 
+                            "trailingFunctionCommas", 
+                            "dynamicImport", 
+                            "numericSeparator", 
+                            "optionalChaining", 
+                            "importMeta", 
+                            "classPrivateProperties", 
+                            "bigInt", 
+                            "optionalCatchBinding",                          
                         ]
                     });
 
