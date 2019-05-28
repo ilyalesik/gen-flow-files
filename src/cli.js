@@ -26,7 +26,6 @@ export default options => {
                             // enable common plugins
                             "flow",
                             "jsx",
-                            "estree",
                             "asyncFunctions",
                             "asyncGenerators",
                             "classConstructorCall",
