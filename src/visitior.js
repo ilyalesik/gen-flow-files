@@ -88,9 +88,9 @@ export const visitor = options => {
                         const functionExpression = bodyMember;
                         const functionTypeAnnotation = t.functionTypeAnnotation(
                             functionExpression.typeParameters,
-                            functionExpression.params.map(param => {
+                            functionExpression.params.map((param, id) => {
                                 const functionTypeParam = t.functionTypeParam(
-                                    t.identifier(param.name),
+                                    t.identifier(t.isObjectPattern(param) ? "arg" + id : param.name),
                                     (param.typeAnnotation && param.typeAnnotation.typeAnnotation) ||
                                         t.anyTypeAnnotation()
                                 );
