@@ -14,17 +14,20 @@ const transformFunctionExpressionParam = (param, id) => {
     return functionTypeParam;
 };
 
-const transformToFunctionTypeAnnotation = path => {
+const transformToFunctionTypeAnnotation = functionDeclaration => {
     const functionTypeAnnotation = t.functionTypeAnnotation(
-        path.node.typeParameters,
-        path.node.params
+        functionDeclaration.typeParameters,
+        functionDeclaration.params
             .filter(param => !t.isRestElement(param))
             .map((param, id) => transformFunctionExpressionParam(param, id)),
         null,
-        (path.node.returnType && path.node.returnType.typeAnnotation) || t.anyTypeAnnotation()
+        (functionDeclaration.returnType && functionDeclaration.returnType.typeAnnotation) || t.anyTypeAnnotation()
     );
-    if (path.node.params.length >= 1 && t.isRestElement(path.node.params[path.node.params.length - 1])) {
-        const restElement = path.node.params[path.node.params.length - 1];
+    if (
+        functionDeclaration.params.length >= 1 &&
+        t.isRestElement(functionDeclaration.params[functionDeclaration.params.length - 1])
+    ) {
+        const restElement = functionDeclaration.params[functionDeclaration.params.length - 1];
         functionTypeAnnotation.rest = t.functionTypeParam(
             t.identifier(restElement.argument.name),
             (restElement.typeAnnotation && restElement.typeAnnotation.typeAnnotation) || t.anyTypeAnnotation()
@@ -74,7 +77,7 @@ export const visitor = options => {
         FunctionDeclaration(path) {
             if (skipTransform) return;
             const declareFunction = t.declareFunction(path.node.id);
-            const functionTypeAnnotation = transformToFunctionTypeAnnotation(path);
+            const functionTypeAnnotation = transformToFunctionTypeAnnotation(path.node);
             declareFunction.id.typeAnnotation = t.typeAnnotation(functionTypeAnnotation);
 
             if (isExportDeclaration(path.parentPath)) {
@@ -90,14 +93,7 @@ export const visitor = options => {
             const properties = body
                 .map(bodyMember => {
                     if (t.isClassMethod(bodyMember)) {
-                        const functionExpression = bodyMember;
-                        const functionTypeAnnotation = t.functionTypeAnnotation(
-                            functionExpression.typeParameters,
-                            functionExpression.params.map((param, id) => transformFunctionExpressionParam(param, id)),
-                            null,
-                            (functionExpression.returnType && functionExpression.returnType.typeAnnotation) ||
-                                t.anyTypeAnnotation()
-                        );
+                        const functionTypeAnnotation = transformToFunctionTypeAnnotation(bodyMember);
 
                         const objectTypeProperty = t.objectTypeProperty(bodyMember.key, functionTypeAnnotation);
                         objectTypeProperty.method = true;
@@ -148,7 +144,7 @@ export const visitor = options => {
             const variableDeclaration = path.parentPath.parentPath;
 
             const declareVariable = t.declareVariable(t.identifier(variableDeclarator.node.id.name));
-            declareVariable.id.typeAnnotation = t.typeAnnotation(transformToFunctionTypeAnnotation(path));
+            declareVariable.id.typeAnnotation = t.typeAnnotation(transformToFunctionTypeAnnotation(path.node));
 
             if (isExportDeclaration(variableDeclaration.parentPath)) {
                 const declareExportDeclaration = transformToDeclareExportDeclaration(

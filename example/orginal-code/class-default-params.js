@@ -4,5 +4,5 @@ type TitleType = {
 };
 
 class TestClass {
-    static TestClassFunc(title: TitleType = { title: "Mr" }) {}
+    static TestClassFunc(title: TitleType = { title: "Mr" }, ...rest: Array<number>) {}
 }
