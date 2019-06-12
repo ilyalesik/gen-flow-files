@@ -1,0 +1,2 @@
+// @flow
+declare export function foo(title: string): string;

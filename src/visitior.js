@@ -2,19 +2,24 @@ const t = require("@babel/types");
 
 const FLOW_DIRECTIVE = /(@flow(\s+(strict(-local)?|weak))?|@noflow)/;
 
+const transformFunctionExpressionParam = (param, id) => {
+    if (t.isAssignmentPattern(param)) {
+        return transformFunctionExpressionParam(param.left, id);
+    }
+    const functionTypeParam = t.functionTypeParam(
+        t.identifier(t.isObjectPattern(param) ? "arg" + id : param.name),
+        (param.typeAnnotation && param.typeAnnotation.typeAnnotation) || t.anyTypeAnnotation()
+    );
+    functionTypeParam.optional = param.optional;
+    return functionTypeParam;
+};
+
 const transformToFunctionTypeAnnotation = path => {
     const functionTypeAnnotation = t.functionTypeAnnotation(
         path.node.typeParameters,
         path.node.params
-            .filter(param => t.isIdentifier(param))
-            .map(param => {
-                const functionTypeParam = t.functionTypeParam(
-                    t.identifier(param.name),
-                    (param.typeAnnotation && param.typeAnnotation.typeAnnotation) || t.anyTypeAnnotation()
-                );
-                functionTypeParam.optional = param.optional;
-                return functionTypeParam;
-            }),
+            .filter(param => !t.isRestElement(param))
+            .map((param, id) => transformFunctionExpressionParam(param, id)),
         null,
         (path.node.returnType && path.node.returnType.typeAnnotation) || t.anyTypeAnnotation()
     );
@@ -88,15 +93,7 @@ export const visitor = options => {
                         const functionExpression = bodyMember;
                         const functionTypeAnnotation = t.functionTypeAnnotation(
                             functionExpression.typeParameters,
-                            functionExpression.params.map((param, id) => {
-                                const functionTypeParam = t.functionTypeParam(
-                                    t.identifier(t.isObjectPattern(param) ? "arg" + id : param.name),
-                                    (param.typeAnnotation && param.typeAnnotation.typeAnnotation) ||
-                                        t.anyTypeAnnotation()
-                                );
-                                functionTypeParam.optional = param.optional;
-                                return functionTypeParam;
-                            }),
+                            functionExpression.params.map((param, id) => transformFunctionExpressionParam(param, id)),
                             null,
                             (functionExpression.returnType && functionExpression.returnType.typeAnnotation) ||
                                 t.anyTypeAnnotation()
