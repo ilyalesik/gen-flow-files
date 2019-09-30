@@ -44,7 +44,8 @@ export default options => {
                             "importMeta",
                             "classPrivateProperties",
                             "bigInt",
-                            "optionalCatchBinding"
+                            "optionalCatchBinding",
+                            "partialApplication"
                         ]
                     });
 
