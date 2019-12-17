@@ -1,5 +1,5 @@
 // @flow
-declare class ClassStaticProp {
+declare class ClassProps {
   prop1: any,
   prop2: string,
   static prop3: any,

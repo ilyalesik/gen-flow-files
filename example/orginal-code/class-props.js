@@ -1,6 +1,6 @@
 // @flow
 
-class ClassStaticProp {
+class ClassProps {
     prop1 = "prop1";
     prop2: string = "prop2";
     static prop3 = "prop3";
