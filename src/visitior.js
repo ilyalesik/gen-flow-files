@@ -103,7 +103,8 @@ export const visitor = options => {
                     if (t.isClassProperty(bodyMember)) {
                         const objectTypeProperty = t.objectTypeProperty(
                             bodyMember.key,
-                            bodyMember.typeAnnotation.typeAnnotation
+                            (bodyMember.typeAnnotation && bodyMember.typeAnnotation.typeAnnotation) ||
+                                t.anyTypeAnnotation()
                         );
                         objectTypeProperty.method = false;
                         objectTypeProperty.static = bodyMember.static;

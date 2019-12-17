@@ -1,0 +1,9 @@
+// @flow
+declare class ClassStaticProp {
+  prop1: any,
+  prop2: string,
+  static prop3: any,
+  static prop4: string,
+  prop5: any,
+  static prop6: any,
+}
