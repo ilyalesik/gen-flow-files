@@ -1,0 +1,3 @@
+// @flow
+declare export class Class1 {}
+declare export default class Class2 {}
