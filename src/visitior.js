@@ -1,6 +1,7 @@
 const t = require("@babel/types");
 
 const FLOW_DIRECTIVE = /(@flow(\s+(strict(-local)?|weak))?|@noflow)/;
+const emptyIdentifier = { type: "Identifier", name: "" };
 
 const transformFunctionExpressionParam = (param, id) => {
     if (t.isAssignmentPattern(param)) {
@@ -76,7 +77,7 @@ export const visitor = options => {
         },
         FunctionDeclaration(path) {
             if (skipTransform) return;
-            const declareFunction = t.declareFunction(path.node.id);
+            const declareFunction = t.declareFunction(path.node.id || emptyIdentifier);
             const functionTypeAnnotation = transformToFunctionTypeAnnotation(path.node);
             declareFunction.id.typeAnnotation = t.typeAnnotation(functionTypeAnnotation);
 
@@ -113,7 +114,12 @@ export const visitor = options => {
                 })
                 .filter(member => !!member);
             const objectTypeAnnotation = t.objectTypeAnnotation(properties);
-            const declareClass = t.declareClass(path.node.id, path.node.typeParameters, [], objectTypeAnnotation);
+            const declareClass = t.declareClass(
+                path.node.id || emptyIdentifier,
+                path.node.typeParameters,
+                [],
+                objectTypeAnnotation
+            );
 
             if (path.node.superClass) {
                 declareClass.extends = [
