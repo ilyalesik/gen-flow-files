@@ -45,7 +45,8 @@ export default options => {
                             "classPrivateProperties",
                             "bigInt",
                             "optionalCatchBinding",
-                            "partialApplication"
+                            "partialApplication",
+                            "throwExpressions"
                         ]
                     });
 
