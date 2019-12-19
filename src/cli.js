@@ -1,7 +1,7 @@
 import glob from "glob";
 import path from "path";
 import fs from "fs";
-const parser = require("@babel/parser");
+import { parse } from "@babel/parser";
 import { _traverse as traverse } from "./traverse";
 import generate from "@babel/generator";
 import mkdirp from "mkdirp";
@@ -19,7 +19,7 @@ export default options => {
                 fs.readFile(path.resolve(inputDir, file), "utf8", (err, code) => {
                     if (err) throw err;
 
-                    const ast = parser.parse(code, {
+                    const ast = parse(code, {
                         sourceType: "module",
 
                         plugins: [
