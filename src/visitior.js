@@ -47,6 +47,16 @@ const transformToDeclareExportDeclaration = (path, declaration) => {
     return declareExportDeclaration;
 };
 
+const transformToIdentifierString = memberExpression => {
+    if (t.isIdentifier(memberExpression)) {
+        return memberExpression.name;
+    }
+
+    return `${transformToIdentifierString(memberExpression.object)}.${transformToIdentifierString(
+        memberExpression.property
+    )}`;
+};
+
 export const visitor = options => {
     let skipTransform = false;
     const changeSkipTransform = newValue => {
@@ -124,7 +134,9 @@ export const visitor = options => {
             if (path.node.superClass) {
                 declareClass.extends = [
                     t.interfaceExtends(
-                        t.identifier(path.node.superClass.name),
+                        t.isIdentifier(path.node.superClass)
+                            ? path.node.superClass
+                            : t.identifier(transformToIdentifierString(path.node.superClass)),
                         (path.node.superTypeParameters &&
                             t.typeParameterInstantiation(path.node.superTypeParameters.params)) ||
                             undefined
