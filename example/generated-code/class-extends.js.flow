@@ -1,0 +1,4 @@
+// @flow
+declare class Component1 extends Component {}
+declare class Component2 extends React.Component {}
+declare class Component3 extends A.B.C {}
