@@ -8,7 +8,7 @@ const transformFunctionExpressionParam = (param, id) => {
         return transformFunctionExpressionParam(param.left, id);
     }
     const functionTypeParam = t.functionTypeParam(
-        t.identifier(t.isObjectPattern(param) ? "arg" + id : param.name),
+        t.identifier(t.isObjectPattern(param) || t.isArrayPattern(param) ? "arg" + id : param.name),
         (param.typeAnnotation && param.typeAnnotation.typeAnnotation) || t.anyTypeAnnotation()
     );
     functionTypeParam.optional = param.optional;
