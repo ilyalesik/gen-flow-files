@@ -1,12 +1,12 @@
 var fs = require("fs");
 
-var babelrc = fs.readFileSync("./.babelrc");
+var babelrc = fs.readFileSync("./babel.config.json");
 var config;
 
 try {
     config = JSON.parse(babelrc);
 } catch (err) {
-    console.error("==>     ERROR: Error parsing your .babelrc.");
+    console.error("==>     ERROR: Error parsing your babel.config.json.");
     console.error(err);
 }
 
