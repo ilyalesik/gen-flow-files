@@ -40,7 +40,7 @@
     "test": "jest --passWithNoTests",
     "prettier": "prettier \"*/**/*.js\" --ignore-path ./.prettierignore --write && git add . && git status",
     "generate-example-code": "rimraf example/generated-code && ./bin/gen-flow-files.js example/orginal-code --out-dir example/generated-code",
-    "prepublish": "npm run test && npm run build && npm run generate-example-code"
+    "prepublish": "npm run test && npm run build"
   },
   "pre-commit": [
     "prettier",
