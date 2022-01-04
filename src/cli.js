@@ -22,7 +22,7 @@ export default options => {
             : undefined,
         function(er, files) {
             for (let file of files) {
-                fs.readFile(path.resolve(inputDir, file), "utf8", (err, code) => {
+                fs.readFile(inputIsDir ? path.resolve(inputDir, file) : inputDirOrFile, "utf8", (err, code) => {
                     if (err) throw err;
 
                     const ast = parse(code, {
