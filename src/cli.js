@@ -7,13 +7,19 @@ import generate from "@babel/generator";
 import mkdirp from "mkdirp";
 
 export default options => {
-    const { inputDir, outputDir } = options;
+    const { inputDir: inputDirOrFile, outputDir: outputDirOrFile } = options;
+
+    const inputIsDir = fs.statSync(inputDirOrFile).isDirectory();
+    const outputIsDir = fs.statSync(outputDirOrFile).isDirectory(); // TODO Instead check if there's a file extension? E.g. .js.flow
+    const inputDir = inputIsDir ? inputDirOrFile : path.dirname(inputDirOrFile);
 
     glob(
-        "**/*.js",
-        {
-            cwd: path.resolve(process.cwd(), inputDir)
-        },
+        inputIsDir ? "**/*.js" : inputDirOrFile,
+        inputIsDir
+            ? {
+                  cwd: path.resolve(process.cwd(), inputDir)
+              }
+            : undefined,
         function(er, files) {
             for (let file of files) {
                 fs.readFile(path.resolve(inputDir, file), "utf8", (err, code) => {
@@ -59,7 +65,7 @@ export default options => {
                             },
                             code
                         );
-                        const outputFile = path.resolve(outputDir, file + ".flow");
+                        const outputFile = outputIsDir ? path.resolve(outputDir, file + ".flow") : outputDirOrFile;
                         const outputFileDir = path.dirname(outputFile);
 
                         const createFile = () => {
@@ -68,7 +74,7 @@ export default options => {
                             });
                         };
 
-                        if (!fs.existsSync(outputFileDir)) {
+                        if (outputIsDir && !fs.existsSync(outputFileDir)) {
                             mkdirp(outputFileDir, function(err) {
                                 if (err) throw err;
                                 createFile();
