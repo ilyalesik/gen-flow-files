@@ -50,6 +50,9 @@
     "type": "git",
     "url": "git+https://github.com/ilyalesik/gen-flow-files.git"
   },
+  "gitpkg":{
+    "registry": "git@github.com:Vydia/gen-flow-files.git"
+  },
   "author": "Ilya Lesik",
   "license": "MIT",
   "bugs": {
