@@ -10,7 +10,7 @@ export default options => {
     const { inputDir: inputDirOrFile, outputDir: outputDirOrFile } = options;
 
     const inputIsDir = fs.statSync(inputDirOrFile).isDirectory();
-    const outputIsDir = fs.statSync(outputDirOrFile).isDirectory(); // TODO Instead check if there's a file extension? E.g. .js.flow
+    const outputIsDir = !outputDirOrFile.match(/.+\.flow$/); // Check if there's a .flow file extension E.g. .js.flow
     const inputDir = inputIsDir ? inputDirOrFile : path.dirname(inputDirOrFile);
 
     glob(
@@ -65,7 +65,9 @@ export default options => {
                             },
                             code
                         );
-                        const outputFile = outputIsDir ? path.resolve(outputDir, file + ".flow") : outputDirOrFile;
+                        const outputFile = outputIsDir
+                            ? path.resolve(outputDirOrFile, file + ".flow")
+                            : outputDirOrFile;
                         const outputFileDir = path.dirname(outputFile);
 
                         const createFile = () => {
